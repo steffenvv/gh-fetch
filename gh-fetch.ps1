@@ -100,9 +100,9 @@ if ($LASTEXITCODE -eq 0) {
 # Download the file
 Write-Host "[3/3] Downloading $Path..." -ForegroundColor Yellow
 try {
-    $fileContent = gh api "repos/$Repo/contents/$Path" --jq '.content' | ForEach-Object {
-        [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($_))
-    }
+    # Get base64 content and join all lines (GitHub API returns base64 with newlines)
+    $base64Content = (gh api "repos/$Repo/contents/$Path" --jq -r '.content') -replace '\s', ''
+    $fileContent = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($base64Content))
 
     if (-not $fileContent) {
         throw "Failed to download file from $Repo/$Path"
