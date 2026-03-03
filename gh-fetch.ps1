@@ -101,7 +101,7 @@ if ($LASTEXITCODE -eq 0) {
 Write-Host "[3/3] Downloading $Path..." -ForegroundColor Yellow
 try {
     # Get base64 content and join all lines (GitHub API returns base64 with newlines)
-    $base64Lines = gh api "repos/$Repo/contents/$Path" --jq -r '.content'
+    $base64Lines = gh api "repos/$Repo/contents/$Path" --jq '.content' | ForEach-Object { $_.Trim('"') }
     $base64Content = ($base64Lines -join '') -replace '\s', ''
     $fileContent = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($base64Content))
 
