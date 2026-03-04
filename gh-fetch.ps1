@@ -90,7 +90,7 @@ if ($LASTEXITCODE -eq 0) {
     Write-Host '  ✓ Already authenticated' -ForegroundColor Green
 } else {
     Write-Host '  → Please authenticate with GitHub...' -ForegroundColor Cyan
-    gh auth login --web
+    gh auth login --web -p https
     if ($LASTEXITCODE -ne 0) {
         throw "GitHub authentication failed"
     }
